@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Editor - Kelola Tombol App Launcher</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .editor-panel, .preview-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
+        }
+
+        .button-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .button-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .button-info {
+            flex: 1;
+        }
+
+        .button-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .button-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .button-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .preview-button {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 14px 18px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 10px;
+            min-height: 60px;
+        }
+
+        .preview-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .preview-icon {
+            font-size: 1.6rem;
+            margin-right: 14px;
+            width: 40px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .preview-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-name {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin: 0 0 2px 0;
+        }
+
+        .preview-description {
+            font-size: 0.8rem;
+            color: rgba(0,0,0,0.6);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .preview-arrow {
+            font-size: 1rem;
+            color: rgba(0,0,0,0.4);
+            margin-left: 10px;
+        }
+
+        .export-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 15px;
+            border: 2px solid #43e97b;
+        }
+
+        .code-output {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Button Editor</h1>
+            <p>Kelola tombol App Launcher dengan mudah - Tanpa perlu coding!</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Editor Panel -->
+            <div class="editor-panel">
+                <h2 class="panel-title">
+                    ✏️ Editor Tombol
+                </h2>
+
+                <form id="buttonForm">
+                    <div class="form-group">
+                        <label for="buttonName">Nama Tombol:</label>
+                        <input type="text" id="buttonName" placeholder="Contoh: JSON Editor" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buttonUrl">URL Link:</label>
+                        <input type="url" id="buttonUrl" placeholder="https://example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buttonDescription">Deskripsi:</label>
+                        <input type="text" id="buttonDescription" placeholder="Deskripsi singkat tombol" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buttonIcon">Icon (Emoji):</label>
+                        <input type="text" id="buttonIcon" placeholder="📝" maxlength="2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buttonCategory">Kategori:</label>
+                        <select id="buttonCategory" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="aplikasi-umum">📱 Aplikasi Umum</option>
+                            <option value="tools">🛠️ Tools</option>
+                            <option value="aplikasi-eve">🚀 Aplikasi EVE</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buttonColor">Warna Icon:</label>
+                        <select id="buttonColor">
+                            <option value="#667eea">Biru</option>
+                            <option value="#f5576c">Merah</option>
+                            <option value="#4facfe">Biru Muda</option>
+                            <option value="#43e97b">Hijau</option>
+                            <option value="#9b59b6">Ungu</option>
+                            <option value="#fa709a">Pink</option>
+                            <option value="#a8edea">Tosca</option>
+                            <option value="#f39c12">Orange</option>
+                            <option value="#27ae60">Hijau Tua</option>
+                            <option value="#4ecdc4">Teal</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        ➕ Tambah Tombol
+                    </button>
+                </form>
+
+                <div class="button-list" id="buttonList">
+                    <h3>📋 Daftar Tombol:</h3>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <h2 class="panel-title">
+                    👁️ Preview
+                </h2>
+                <div id="previewArea">
+                    <p style="color: #666; text-align: center; padding: 40px;">
+                        Tambahkan tombol untuk melihat preview
+                    </p>
+                </div>
+
+                <div class="export-section">
+                    <h3>📤 Export Kode HTML</h3>
+                    <p>Copy kode di bawah ini dan paste ke file index.html:</p>
+                    <button type="button" class="btn btn-success" onclick="generateCode()">
+                        🔄 Generate Kode
+                    </button>
+                    <div class="code-output" id="codeOutput">
+                        Klik "Generate Kode" untuk membuat kode HTML
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="copyCode()">
+                        📋 Copy Kode
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
