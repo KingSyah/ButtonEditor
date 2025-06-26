@@ -1,20 +1,22 @@
-# Button Editor
+# 🎨 Button Editor
 
-Sebuah alat sederhana untuk membuat dan menyesuaikan tombol dengan mudah. Kunjungi [ButtonEditor](https://kingsyah.github.io/ButtonEditor/) untuk mulai menggunakan.
+A simple and interactive web-based tool for customizing and generating HTML buttons.
 
-## Fitur
+🌐 [Live Demo](https://kingsyah.github.io/ButtonEditor/)
 
-- Sesuaikan warna, ukuran, dan teks tombol
-- Pratinjau langsung perubahan
-- Salin kode HTML/CSS dengan mudah
+## Features
+- Visual button customization (text, color, size, border, etc.)
+- Real-time preview
+- Copy generated HTML code instantly
 
-## Cara Menggunakan
+## Built With
+- HTML
+- CSS
+- JavaScript
 
-1. Buka [ButtonEditor](https://kingsyah.github.io/ButtonEditor/)
-2. Sesuaikan tombol menggunakan kontrol yang tersedia
-3. Salin kode yang dihasilkan
-4. Tempel ke proyek Anda
+## Usage
+Open the site and start editing your button.
+Once satisfied, copy the generated HTML and paste it into your project.
 
-## Kontribusi
-
-Jika ingin berkontribusi, silakan buka [repositori GitHub](https://github.com/kingsyah/ButtonEditor).
+## License
+MIT – Free to use, modify, and distribute.
